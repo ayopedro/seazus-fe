@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-dark text-lite bg-[url('./assets/Swirl.png'),_url(./assets/Cubes.png)] md:bg-top bg-no-repeat font-sans;
+}
+
+input {
+  @apply rounded-full appearance-none bg-transparent border-2 border-gray-500 p-2 px-3 mt-3 outline-none placeholder:opacity-30;
+}
+
+.colored-bg {
+  @apply font-bold bg-gradient-radial from-primary to-secondary bg-clip-text text-transparent w-fit;
+}
+
+.btn {
+  @apply rounded-full border-2 px-7 py-2 text-slate-100 cursor-pointer transition ease-in duration-200 hover:bg-opacity-70;
+}
+
+.btn-primary {
+  @apply border-secondary bg-secondary hover:shadow-xl hover:bg-primary hover:border-primary;
+}
+
+.auth-form {
+  @apply flex flex-col w-full md:w-2/5 border-2 border-gray-500 px-5 py-10 rounded-lg gap-5 bg-dark;
+}
