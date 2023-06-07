@@ -6,6 +6,7 @@ import { Navbar } from './components/Navbar';
 import { Signup } from './pages/Signup';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
+import { Protected } from './components/Protected';
 
 function App() {
   return (
@@ -13,11 +14,14 @@ function App() {
       <Navbar />
       <Routes>
         <Route index element={<Home />} />
-        <Route path='profile' element={<Profile />} />
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path='forgot-password' element={<ForgotPassword />} />
         <Route path='reset-password' element={<ResetPassword />} />
+        <Route
+          path='profile'
+          element={<Protected component={Profile} isLoggedIn={false} />}
+        />
       </Routes>
     </div>
   );
