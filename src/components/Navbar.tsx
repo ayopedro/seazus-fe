@@ -24,7 +24,7 @@ export const Navbar = () => {
           >
             Login <MdLogin className='text-xl' />
           </Link>
-          <Link to={'/register'} className='btn btn-primary hidden md:block'>
+          <Link to={'/signup'} className='btn btn-primary hidden md:block'>
             Register Now
           </Link>
         </div>
@@ -42,7 +42,7 @@ export const Navbar = () => {
                   <Link to={'/profile'}>Profile</Link>
                 </li>
                 <li onClick={showDropdown} className='pt-2'>
-                  <Link to={'/profile-settings'}>Settings</Link>
+                  <Link to={'/history'}>History</Link>
                 </li>
                 <li onClick={showDropdown} className='pt-2'>
                   Logout

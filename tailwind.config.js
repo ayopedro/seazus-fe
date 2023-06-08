@@ -14,6 +14,9 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
+      boxShadow: {
+        btn: '0px 0px 22px 0px #144EE361',
+      },
     },
   },
   plugins: [],
