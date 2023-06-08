@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import urlImage from '../assets/url_illustration.png';
-import { Shorten } from '../pages/Shorten';
+import { Shorten } from './Shorten';
 
 export const Hero = () => {
   const isLoggedIn = true;

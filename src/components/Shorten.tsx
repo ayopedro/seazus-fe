@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AiOutlineLink } from 'react-icons/ai';
 import { ShortUrlProps, ShortenURL } from '../types';
-import { ShortUrl } from '../components/ShortUrl';
+import { ShortUrl } from './ShortUrl';
 
 export const Shorten = () => {
   const initValues: ShortenURL = {

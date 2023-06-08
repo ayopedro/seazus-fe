@@ -7,6 +7,8 @@ import { Signup } from './pages/Signup';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { Protected } from './components/Protected';
+import 'antd/dist/reset.css';
+import { ChangePassword } from './pages/ChangePassword';
 
 function App() {
   return (
@@ -20,7 +22,11 @@ function App() {
         <Route path='reset-password' element={<ResetPassword />} />
         <Route
           path='profile'
-          element={<Protected component={Profile} isLoggedIn={false} />}
+          element={<Protected component={Profile} isLoggedIn={true} />}
+        />
+        <Route
+          path='change-password'
+          element={<Protected component={ChangePassword} isLoggedIn={true} />}
         />
       </Routes>
     </div>
