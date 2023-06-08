@@ -6,7 +6,7 @@ import {
   MdOutlineQrCode2,
   MdRemoveRedEye,
 } from 'react-icons/md';
-import { ConfigProvider, QRCode, Table, Tag } from 'antd';
+import { ConfigProvider, Table, Tag, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import { copyToClipboard } from '../utils/helpers';
 
@@ -25,8 +25,10 @@ const columns: ColumnsType<TableData> = [
         >
           {text}
         </a>
-        <div className='cursor-pointer border border-gray-700 p-0.5 w-7 h-7 rounded-full object-contain flex items-center justify-center'>
-          <MdOutlineContentCopy onClick={() => copyToClipboard(text)} />
+        <div className='copy'>
+          <Tooltip placement='top' title={'Copy'} color='#353C4A'>
+            <MdOutlineContentCopy onClick={() => copyToClipboard(text)} />
+          </Tooltip>
         </div>
       </div>
     ),
@@ -79,11 +81,15 @@ const columns: ColumnsType<TableData> = [
     render: (_, record) => {
       return (
         <div className='flex items-center gap-3 justify-center'>
-          <Link to={``}>
-            <MdRemoveRedEye className='text-lg hover:text-blue-400' />
+          <Link to={`/link/${record.id}`}>
+            <Tooltip placement='top' title={'View'} color='#353C4A'>
+              <MdRemoveRedEye className='text-lg hover:text-blue-400' />
+            </Tooltip>
           </Link>
           <button>
-            <MdDelete className='text-lg hover:text-red-500' />
+            <Tooltip placement='top' title={'Delete'} color='#353C4A'>
+              <MdDelete className='text-lg hover:text-red-500' />
+            </Tooltip>
           </button>
         </div>
       );
@@ -93,7 +99,7 @@ const columns: ColumnsType<TableData> = [
 
 const data: TableData[] = [
   {
-    key: 'sjsios',
+    id: 'sjsios',
     short_url: 'https://linkly.com/Bn41aCOlnxj',
     long_url: 'https://www.twitter.com/tweets/8erelCoihu/',
     qr_code: 'asdfghjk',
@@ -102,7 +108,7 @@ const data: TableData[] = [
     date: 'Oct-08-2023',
   },
   {
-    key: 'sjsiods',
+    id: 'sjsiods',
     short_url: 'https://linkly.com/Bn41aCOlnxj',
     long_url: 'https://www.twitter.com/tweets/8erelCoihu/',
     qr_code: 'asdfghgjk',
@@ -111,7 +117,7 @@ const data: TableData[] = [
     date: 'Oct-08-2023',
   },
   {
-    key: 'sjsisos',
+    id: 'sjsisos',
     short_url: 'https://linkly.com/Bn41aCOlnxj',
     long_url: 'https://www.twitter.com/tweets/8erelCoihu/',
     qr_code: 'asdfghjk',

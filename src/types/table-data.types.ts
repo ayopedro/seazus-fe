@@ -1,5 +1,5 @@
 export type TableData = {
-  key: string;
+  id: string;
   short_url: string;
   long_url: string;
   qr_code: string;

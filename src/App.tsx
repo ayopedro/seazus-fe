@@ -1,16 +1,21 @@
-import { Route, Routes } from 'react-router-dom';
-import { Home } from './pages/Home';
-import { Profile } from './pages/Profile';
-import { Login } from './pages/Login';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import {
+  Home,
+  Profile,
+  Login,
+  Signup,
+  ForgotPassword,
+  ResetPassword,
+  ChangePassword,
+  LinkDetail,
+} from './pages';
 import { Navbar } from './components/Navbar';
-import { Signup } from './pages/Signup';
-import { ForgotPassword } from './pages/ForgotPassword';
-import { ResetPassword } from './pages/ResetPassword';
 import { Protected } from './components/Protected';
 import 'antd/dist/reset.css';
-import { ChangePassword } from './pages/ChangePassword';
+import { Result } from 'antd';
 
 function App() {
+  const navigate = useNavigate();
   return (
     <div className='container mx-auto min-h-screen px-5'>
       <Navbar />
@@ -25,8 +30,40 @@ function App() {
           element={<Protected component={Profile} isLoggedIn={true} />}
         />
         <Route
+          path='link/:id'
+          element={<Protected component={LinkDetail} isLoggedIn={true} />}
+        />
+        <Route
           path='change-password'
           element={<Protected component={ChangePassword} isLoggedIn={true} />}
+        />
+        <Route
+          path='*'
+          element={
+            <div className='mt-20'>
+              <Result
+                status='404'
+                title={
+                  <h2 className='text-3xl md:text-5xl text-secondary font-bold'>
+                    Page not found!
+                  </h2>
+                }
+                subTitle={
+                  <p className='text-white md:text-base'>
+                    Sorry, the page you visited does not exist.
+                  </p>
+                }
+                extra={
+                  <button
+                    className='btn btn-primary'
+                    onClick={() => navigate('/')}
+                  >
+                    Back Home
+                  </button>
+                }
+              />
+            </div>
+          }
         />
       </Routes>
     </div>
