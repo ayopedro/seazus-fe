@@ -33,7 +33,7 @@ export const UrlAnalytics = () => {
 
   const data: AnalyticsData[] = [];
   return (
-    <div className='md:w-3/4 flex justify-center mx-auto bg-grey-full rounded-lg p-3'>
+    <div className='flex justify-center mx-auto bg-grey-full rounded-lg p-3'>
       <ConfigProvider
         theme={{
           token: {
@@ -48,6 +48,7 @@ export const UrlAnalytics = () => {
           columns={columns}
           dataSource={data}
           className='w-full text-white'
+          scroll={{ x: 1000 }}
         />
       </ConfigProvider>
     </div>

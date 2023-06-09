@@ -10,11 +10,17 @@ import {
 import { RiShareBoxFill } from 'react-icons/ri';
 import { useNavigate, useParams } from 'react-router-dom';
 import { UrlAnalytics } from '../components/UrlAnalytics';
-import { Tooltip } from 'antd';
+import { Modal, Tooltip } from 'antd';
+import { useState } from 'react';
 
 export const LinkDetail = () => {
+  const [showQr, setShowQr] = useState<boolean>(false);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const modalHandler = () => {
+    setShowQr(!showQr);
+  };
   console.log('🚀 ~ file: LinkDetail.tsx:7 ~ LinkDetail ~ id:', id);
 
   return (
@@ -40,7 +46,10 @@ export const LinkDetail = () => {
               <MdContentCopy className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
             </Tooltip>
             <Tooltip placement='top' title={'QR Code'} color='#353C4A'>
-              <MdOutlineQrCode2 className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
+              <MdOutlineQrCode2
+                className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
+                onClick={modalHandler}
+              />
             </Tooltip>
           </div>
         </div>
@@ -62,6 +71,25 @@ export const LinkDetail = () => {
           <UrlAnalytics />
         </section>
       </div>
+      <Modal open={showQr} onCancel={modalHandler} centered footer={null}>
+        <div className='flex flex-col items-center justify-center'>
+          <img src={'qr_code'} alt={'short_url'} />
+          <small>{'short_url'}</small>
+          <div className='mt-10 flex gap-3 items-center'>
+            <button className='btn bg-secondary border-none py-4'>
+              Generate
+            </button>
+            <a
+              href={'qr_code'}
+              download={'short_url'}
+              className='btn bg-secondary hover:text-white'
+            >
+              Download
+            </a>
+            <button className='btn bg-red-500 border-none py-4'>Delete</button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
