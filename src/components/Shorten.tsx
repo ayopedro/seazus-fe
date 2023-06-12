@@ -18,8 +18,8 @@ export const Shorten = () => {
   };
 
   const [values, setValues] = useState<ShortenURL>(initValues);
-  const [showResult, setShowResult] = useState<boolean>(false);
-  const [urlData, setUrlData] = useState<ShortUrlProps>(initUrlValues);
+  const [showResult] = useState<boolean>(false);
+  const [urlData] = useState<ShortUrlProps>(initUrlValues);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prevValues) => ({

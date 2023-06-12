@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { MdLogin } from 'react-icons/md';
-import { FaUserCircle, FaCaretDown } from 'react-icons/fa';
+import { FaCaretDown } from 'react-icons/fa';
 import Avatar from 'react-avatar';
 
 export const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(true);
+  const [loggedIn] = useState<boolean>(true);
   const [dropdown, setDropdown] = useState<boolean>(false);
 
   const showDropdown = () => {

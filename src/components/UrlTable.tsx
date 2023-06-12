@@ -37,7 +37,6 @@ const columns: ColumnsType<TableData> = [
     key: 'long_url',
     title: 'Original Link',
     dataIndex: 'long_url',
-    responsive: ['lg'],
   },
   {
     key: 'qr_code',
@@ -48,13 +47,11 @@ const columns: ColumnsType<TableData> = [
         <MdOutlineQrCode2 className='cursor-pointer text-3xl' />
       </div>
     ),
-    responsive: ['md'],
   },
   {
     key: 'clicks',
     title: 'Clicks',
     dataIndex: 'clicks',
-    responsive: ['md'],
   },
   {
     key: 'status',
@@ -66,13 +63,11 @@ const columns: ColumnsType<TableData> = [
       ) : (
         <Tag color='yellow'>Inactive</Tag>
       ),
-    responsive: ['md'],
   },
   {
     key: 'date',
     title: 'Date Created',
     dataIndex: 'date',
-    responsive: ['md'],
   },
   {
     key: 'action',
@@ -144,6 +139,7 @@ export const UrlTable = () => {
           dataSource={data}
           columns={columns}
           pagination={data.length <= 10 && false}
+          scroll={{ x: 1400 }}
         />
       </ConfigProvider>
     </div>

@@ -1,17 +1,19 @@
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AiOutlineScissor } from 'react-icons/ai';
 import { FaLink } from 'react-icons/fa';
 import {
   MdArrowBackIosNew,
   MdContentCopy,
+  MdLink,
+  MdLinkOff,
   MdOutlineAdsClick,
   MdOutlineCalendarMonth,
   MdOutlineQrCode2,
 } from 'react-icons/md';
 import { RiShareBoxFill } from 'react-icons/ri';
-import { useNavigate, useParams } from 'react-router-dom';
 import { UrlAnalytics } from '../components/UrlAnalytics';
 import { Modal, Tooltip } from 'antd';
-import { useState } from 'react';
 
 export const LinkDetail = () => {
   const [showQr, setShowQr] = useState<boolean>(false);
@@ -50,6 +52,12 @@ export const LinkDetail = () => {
                 className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
                 onClick={modalHandler}
               />
+            </Tooltip>
+            <Tooltip placement='top' title={'Disable link'} color='#353C4A'>
+              <MdLinkOff className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
+            </Tooltip>
+            <Tooltip placement='top' title={'Enable link'} color='#353C4A'>
+              <MdLink className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
             </Tooltip>
           </div>
         </div>
