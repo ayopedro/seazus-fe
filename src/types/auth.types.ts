@@ -11,4 +11,6 @@ export type AuthState = {
   isAuthenticated: boolean;
   loading: 'idle' | 'pending';
   error: string | null | unknown;
+  access_token?: string | null;
+  refresh_token?: string | null;
 };
