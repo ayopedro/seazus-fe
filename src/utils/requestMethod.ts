@@ -23,13 +23,17 @@ export const privateRequest = async () => {
   if (tokenExpired(token)) {
     try {
       const refreshToken = dehashData(Cookies.get('refresh_token') || '');
-      const response = await request.post('/auth/refresh-token', {
+      const response = await request.post('auth/refresh-token', {
         token: refreshToken,
       });
       token = response.data.access_token;
       const hash = crypt(APP_SALT, token);
       Cookies.set('access_token', hash);
     } catch (error) {
+      console.log(
+        '🚀 ~ file: requestMethod.ts:33 ~ privateRequest ~ error:',
+        error
+      );
       throw new Error('Failed to refresh access token');
     }
   }

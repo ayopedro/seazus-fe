@@ -3,15 +3,19 @@ import { Link } from 'react-router-dom';
 import { PasswordInput } from '../components/PasswordInput';
 import { useForm } from '../utils/hooks/useForm';
 import { loginValidator } from '../utils/validators';
+import { useAppDispatch } from '../utils/hooks/reduxHook';
+import { loginUser } from '../services/thunks';
+import { LoginUser } from '../types';
 
 export const Login = () => {
   const initialState = {
     email: '',
     password: '',
   };
-
+  const dispatch = useAppDispatch();
   const submitHandler = () => {
     console.log(values);
+    dispatch(loginUser(values as LoginUser));
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({
