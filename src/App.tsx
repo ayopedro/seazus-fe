@@ -4,8 +4,8 @@ import {
   Profile,
   Login,
   Signup,
-  ForgotPassword,
-  ResetPassword,
+  ForgotPasswordPage,
+  ResetPasswordPage,
   ChangePassword,
   LinkDetail,
 } from './pages';
@@ -13,6 +13,7 @@ import { Navbar } from './components/Navbar';
 import { Protected } from './components/Protected';
 import 'antd/dist/reset.css';
 import { Result } from 'antd';
+import { ConfirmEmail } from './pages/ConfirmEmail';
 
 function App() {
   const navigate = useNavigate();
@@ -23,8 +24,9 @@ function App() {
         <Route index element={<Home />} />
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
-        <Route path='forgot-password' element={<ForgotPassword />} />
-        <Route path='reset-password' element={<ResetPassword />} />
+        <Route path='confirm-email' element={<ConfirmEmail />} />
+        <Route path='forgot-password' element={<ForgotPasswordPage />} />
+        <Route path='reset-password' element={<ResetPasswordPage />} />
         <Route
           path='profile'
           element={<Protected component={Profile} isLoggedIn={true} />}

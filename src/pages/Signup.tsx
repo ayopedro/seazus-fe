@@ -1,19 +1,39 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { useForm } from '../utils/hooks/useForm';
 import { registerValidator } from '../utils/validators';
 import { PasswordInput } from '../components/PasswordInput';
+import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
+import { loading } from '../services/selectors';
+import {
+  registerFailure,
+  registerStart,
+  registerSuccess,
+} from '../services/slices/authSlice';
+import { registerUser } from '../services/api-calls';
+import { RegisterUser } from '../types';
 
 export const Signup = () => {
   const initialState = {
-    first_name: '',
-    last_name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
   };
 
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(loading);
+
   const submitHandler = () => {
-    console.log(values);
+    dispatch(registerStart());
+    registerUser(values as RegisterUser, navigate)
+      .then((res) => {
+        dispatch(registerSuccess(res));
+      })
+      .catch((err) => {
+        dispatch(registerFailure(err.message));
+      });
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({
@@ -28,41 +48,42 @@ export const Signup = () => {
         <button
           type='button'
           className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-2 flex items-center justify-center'
+          // onClick={() => dispatch(authWithGoogle())}
         >
           Register with <FcGoogle className='ml-2' />
         </button>
         <hr />
         <div className='flex flex-col'>
           <label
-            htmlFor='first_name'
+            htmlFor='firstName'
             className="after:content-['*'] after:ml-1 after:text-red-500"
           >
             First Name
           </label>
           <input
             type='text'
-            name='first_name'
+            name='firstName'
             placeholder='John'
-            value={values.first_name}
+            value={values.firstName}
             onChange={handleChange}
           />
-          <span className='text-red-500 text-sm mt-2'>{errors.first_name}</span>
+          <span className='text-red-500 text-sm mt-2'>{errors.firstName}</span>
         </div>
         <div className='flex flex-col'>
           <label
-            htmlFor='last_name'
+            htmlFor='lastName'
             className="after:content-['*'] after:ml-1 after:text-red-500"
           >
             Last Name
           </label>
           <input
             type='text'
-            name='last_name'
+            name='lastName'
             placeholder='Doe'
-            value={values.last_name}
+            value={values.lastName}
             onChange={handleChange}
           />
-          <span className='text-red-500 text-sm mt-2'>{errors.last_name}</span>
+          <span className='text-red-500 text-sm mt-2'>{errors.lastName}</span>
         </div>
         <div className='flex flex-col'>
           <label
@@ -95,7 +116,7 @@ export const Signup = () => {
           <span className='text-red-500 text-sm mt-2'>{errors.password}</span>
         </div>
         <button className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-5'>
-          Sign up
+          {isLoading === 'pending' ? 'Please wait...' : 'Sign up'}
         </button>
         <small className='block text-end'>
           Already got an account?{' '}

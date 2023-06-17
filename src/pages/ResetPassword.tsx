@@ -1,17 +1,29 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PasswordInput } from '../components/PasswordInput';
 import { useForm } from '../utils/hooks/useForm';
 import { resetValidator } from '../utils/validators';
+import { ResetPassword } from '../types';
+import { useAppSelector } from '../utils/hooks/reduxHook';
+import { user } from '../services/selectors';
+import { resetPassword } from '../services/api-calls';
 
-export const ResetPassword = () => {
+export const ResetPasswordPage = () => {
   const initialState = {
     token: '',
     new_password: '',
     confirm_password: '',
   };
 
+  const userDetails = useAppSelector(user);
+  const navigate = useNavigate();
+
   const submitHandler = () => {
-    console.log(values);
+    const data: ResetPassword = {
+      token: values.token,
+      newPassword: values.new_password,
+    };
+
+    resetPassword(data, userDetails?.id, navigate);
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({
@@ -72,12 +84,12 @@ export const ResetPassword = () => {
         <button className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-5'>
           Reset Password
         </button>
-        <small className='block text-end'>
+        {/* <small className='block text-end'>
           Already got an account?{' '}
           <span className='underline underline-offset-2 text-primary'>
             <Link to={'/login'}>Login</Link>
           </span>
-        </small>
+        </small> */}
       </form>
     </div>
   );

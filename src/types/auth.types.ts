@@ -31,3 +31,19 @@ export type LoginUser = {
   email: string;
   password: string;
 };
+
+export type RegisterUser = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+};
+
+export type ForgotPassword = {
+  email: string;
+};
+
+export type ResetPassword = {
+  token: string;
+  newPassword: string;
+};

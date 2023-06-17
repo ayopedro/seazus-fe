@@ -1,11 +1,17 @@
 import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PasswordInput } from '../components/PasswordInput';
 import { useForm } from '../utils/hooks/useForm';
 import { loginValidator } from '../utils/validators';
-import { useAppDispatch } from '../utils/hooks/reduxHook';
-import { loginUser } from '../services/thunks';
+import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
+import { authWithGoogle, loginUser } from '../services/api-calls';
 import { LoginUser } from '../types';
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+} from '../services/slices/authSlice';
+import { loading } from '../services/selectors';
 
 export const Login = () => {
   const initialState = {
@@ -13,9 +19,14 @@ export const Login = () => {
     password: '',
   };
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const isLoading = useAppSelector(loading);
+
   const submitHandler = () => {
-    console.log(values);
-    dispatch(loginUser(values as LoginUser));
+    dispatch(loginStart());
+    loginUser(values as LoginUser, navigate)
+      .then((res) => dispatch(loginSuccess(res)))
+      .catch((err) => dispatch(loginFailure(err.message)));
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({
@@ -51,7 +62,7 @@ export const Login = () => {
           </small>
         </div>
         <button className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-5'>
-          Login
+          {isLoading === 'pending' ? 'Logging in...' : 'Login'}
         </button>
         <p className='text-center before:border-gray-400 before:border-b-2 before:w-full'>
           or
@@ -59,6 +70,7 @@ export const Login = () => {
         <button
           type='button'
           className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-2 flex items-center justify-center'
+          onClick={() => authWithGoogle()}
         >
           Login with <FcGoogle className='ml-2' />
         </button>

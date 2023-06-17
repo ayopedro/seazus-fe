@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AuthResponse, AuthState } from '../../types';
-import { authWithGoogle, loginUser, logoutUser, registerUser } from '../thunks';
 
 const initialState: AuthState = {
   user: null,
@@ -11,67 +10,76 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(registerUser.pending, (state) => {
+  reducers: {
+    saveUser(state, action: PayloadAction<AuthResponse>) {
+      state.user = action.payload.user;
+    },
+    registerStart(state) {
       state.loading = 'pending';
       state.error = null;
-    });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
+    },
+    registerSuccess(state, action: PayloadAction<AuthResponse>) {
       state.loading = 'idle';
-      state.user = action.payload;
+      state.user = action.payload.user;
       state.error = null;
-    });
-    builder.addCase(registerUser.rejected, (state, action) => {
+    },
+    registerFailure(state, action: PayloadAction<string>) {
       state.loading = 'idle';
       state.error = action.payload;
-    });
-    builder.addCase(loginUser.pending, (state) => {
+    },
+    confirmStart(state) {
       state.loading = 'pending';
       state.error = null;
-    });
-    builder.addCase(
-      loginUser.fulfilled,
-      (state, action: PayloadAction<AuthResponse>) => {
-        state.loading = 'idle';
-        state.user = action.payload.user;
-        state.access_token = action.payload.accessToken;
-        state.refresh_token = action.payload.refreshToken;
-        state.isAuthenticated = true;
-        state.error = null;
-      }
-    );
-    builder.addCase(loginUser.rejected, (state, action) => {
+    },
+    confirmSuccess(state) {
+      state.loading = 'idle';
+      state.error = null;
+    },
+    confirmError(state, action: PayloadAction<string>) {
       state.loading = 'idle';
       state.error = action.payload;
-    });
-    builder.addCase(authWithGoogle.pending, (state) => {
+    },
+    loginStart(state) {
       state.loading = 'pending';
       state.error = null;
-    });
-    builder.addCase(
-      authWithGoogle.fulfilled,
-      (state, action: PayloadAction<AuthResponse>) => {
-        state.loading = 'idle';
-        state.user = action.payload.user;
-        state.access_token = action.payload.accessToken;
-        state.refresh_token = action.payload.refreshToken;
-        state.isAuthenticated = true;
-        state.error = null;
-      }
-    );
-    builder.addCase(authWithGoogle.rejected, (state, action) => {
+    },
+    loginSuccess(state, action: PayloadAction<AuthResponse>) {
+      state.loading = 'idle';
+      state.user = action.payload.user;
+      state.access_token = action.payload.accessToken;
+      state.refresh_token = action.payload.refreshToken;
+      state.isAuthenticated = true;
+      state.error = null;
+    },
+    loginFailure(state, action: PayloadAction<string>) {
       state.loading = 'idle';
       state.error = action.payload;
-    });
-    builder.addCase(logoutUser.fulfilled, (state) => {
+    },
+    logoutUser(state) {
       state.user = null;
-      state.isAuthenticated = false;
       state.access_token = null;
       state.refresh_token = null;
-    });
+      state.isAuthenticated = false;
+      state.error = null;
+    },
   },
 });
+
+export const {
+  saveUser,
+  loginFailure,
+  loginStart,
+  loginSuccess,
+  registerFailure,
+  registerStart,
+  registerSuccess,
+  confirmError,
+  confirmStart,
+  confirmSuccess,
+  logoutUser,
+} = authSlice.actions;
+
+export default authSlice;

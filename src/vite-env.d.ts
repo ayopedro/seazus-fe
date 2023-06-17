@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_SALT: string;
-  readonly BASE_URL: string;
+  readonly VITE_BASE_URL: string;
   // more env variables...
 }
 

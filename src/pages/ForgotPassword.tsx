@@ -1,14 +1,32 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from '../utils/hooks/useForm';
 import { loginValidator } from '../utils/validators';
+import { useState } from 'react';
+import { forgotPassword } from '../services/api-calls';
+import { ForgotPassword } from '../types';
+import { useAppDispatch } from '../utils/hooks/reduxHook';
+import { saveUser } from '../services/slices/authSlice';
 
-export const ForgotPassword = () => {
+export const ForgotPasswordPage = () => {
   const initialState = {
     email: '',
   };
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const submitHandler = () => {
-    console.log(values);
+    setLoading(true);
+    forgotPassword(values as ForgotPassword, navigate)
+      .then((res) => {
+        setLoading(false);
+        dispatch(saveUser(res));
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.error(err);
+      });
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({
@@ -36,16 +54,16 @@ export const ForgotPassword = () => {
           <span className='text-red-500 text-sm mt-2'>{errors.email}</span>
         </div>
         <button className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-5'>
-          Send Reset Token
+          {loading ? 'Sending...' : 'Send Reset Token'}
         </button>
         {/* <p className='text-center before:border-gray-400 before:border-b-2 before:w-full'>
       or
     </p> */}
 
         <small className='block text-end'>
-          Already got an account?{' '}
+          Remembered your password?{' '}
           <span className='underline underline-offset-2 text-primary'>
-            <Link to={'/login'}>Login</Link>
+            <Link to={'/login'}>Login Instead</Link>
           </span>
         </small>
       </form>

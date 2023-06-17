@@ -3,13 +3,29 @@ import { Link, NavLink } from 'react-router-dom';
 import { MdLogin } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
 import Avatar from 'react-avatar';
+import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
+import { isAuthenticated, user } from '../services/selectors';
+import Cookies from 'js-cookie';
+import { logoutUser } from '../services/slices/authSlice';
 
 export const Navbar = () => {
-  const [loggedIn] = useState<boolean>(true);
   const [dropdown, setDropdown] = useState<boolean>(false);
+
+  const isAuth = useAppSelector(isAuthenticated);
+  const user_details = useAppSelector(user);
+
+  const dispatch = useAppDispatch();
 
   const showDropdown = () => {
     setDropdown(!dropdown);
+  };
+
+  const logoutHandler = () => {
+    Cookies.remove('access_token');
+    Cookies.remove('refresh_token');
+    localStorage.removeItem('isLoggedIn');
+    setDropdown(false);
+    dispatch(logoutUser());
   };
 
   return (
@@ -17,7 +33,7 @@ export const Navbar = () => {
       <h1 className='uppercase text-2xl md:text-4xl colored-bg'>
         <Link to={'/'}>seazus</Link>
       </h1>
-      {!loggedIn ? (
+      {!isAuth ? (
         <div className='flex gap-3'>
           <Link
             to={'/login'}
@@ -32,8 +48,14 @@ export const Navbar = () => {
       ) : (
         <div className='border border-grey-mid bg-grey-full p-2 w-40 md:w-48 rounded-full flex justify-between items-center relative'>
           <div className='flex items-center gap-2'>
-            <Avatar name='John Doe' size='30' round />
-            <p>John Doe</p>
+            <Avatar
+              name={`${user_details?.firstName} ${user_details?.lastName}`}
+              size='30'
+              round
+            />
+            <p className='text-sm md:text-base'>
+              {user_details?.firstName} {user_details?.lastName}
+            </p>
           </div>
           <FaCaretDown className='cursor-pointer' onClick={showDropdown} />
           {dropdown && (
@@ -59,7 +81,7 @@ export const Navbar = () => {
                     Change Password
                   </NavLink>
                 </li>
-                <li onClick={showDropdown} className='pt-2'>
+                <li onClick={logoutHandler} className='pt-2'>
                   Logout
                 </li>
               </ul>

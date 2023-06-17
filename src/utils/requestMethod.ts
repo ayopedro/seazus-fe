@@ -1,10 +1,8 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { crypt, dehashData } from './helpers';
+import { redirect } from 'react-router-dom';
 
-const baseURL = import.meta.env.BASE_URL;
-const APP_SALT = import.meta.env.VITE_SALT;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -18,40 +16,46 @@ export const request: AxiosInstance = axios.create({
 });
 
 export const privateRequest = async () => {
-  let token = dehashData(Cookies.get('access_token') || '');
-
-  if (tokenExpired(token)) {
-    try {
-      const refreshToken = dehashData(Cookies.get('refresh_token') || '');
-      const response = await request.post('auth/refresh-token', {
-        token: refreshToken,
-      });
-      token = response.data.access_token;
-      const hash = crypt(APP_SALT, token);
-      Cookies.set('access_token', hash);
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: requestMethod.ts:33 ~ privateRequest ~ error:',
-        error
-      );
-      throw new Error('Failed to refresh access token');
-    }
-  }
+  const token = Cookies.get('access_token') || '';
 
   request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   return request;
 };
 
-const tokenExpired = (token: string): boolean => {
+const refreshToken = async () => {
+  const refresh_token = Cookies.get('refresh_token');
   try {
-    const decoded = jwt.decode(token) as JwtPayload;
-    const currentTime = Date.now() / 1000;
+    const response = await request.post('/auth/refresh-token', {
+      token: refresh_token,
+    });
 
-    if (decoded.exp === undefined) return true;
+    const { accessToken } = response.data;
+    Cookies.set('access_token', accessToken);
 
-    return decoded.exp < currentTime;
+    return accessToken;
   } catch (error) {
-    console.error(error);
-    return true;
+    console.error('Error refreshing token', error);
+    redirect('/login');
   }
 };
+
+axios.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const newAccessToken = await refreshToken();
+
+      if (newAccessToken) {
+        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
+        return axios(originalRequest);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
