@@ -55,8 +55,6 @@ export const authWithGoogle = async () => {
 
     const { accessToken, refreshToken } = response.data;
 
-    localStorage.setItem('isLoggedIn', 'true');
-
     Cookies.set('access_token', accessToken);
     Cookies.set('refresh_token', refreshToken);
 
@@ -76,8 +74,6 @@ export const loginUser = async (
   try {
     const response = await request.post('auth/login', data);
     const { accessToken, refreshToken } = response.data;
-
-    localStorage.setItem('isLoggedIn', 'true');
 
     Cookies.set('access_token', accessToken);
     Cookies.set('refresh_token', refreshToken);

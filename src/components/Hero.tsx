@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import urlImage from '../assets/url_illustration.png';
 import { Shorten } from './Shorten';
+import { useAppSelector } from '../utils/hooks/reduxHook';
+import { isAuthenticated } from '../services/selectors';
 
 export const Hero = () => {
-  const isLoggedIn = false;
+  const isAuth = useAppSelector(isAuthenticated);
   return (
     <section className='flex flex-col justify-center md:grid md:grid-cols-12 items-center min-h-[80vh] mt-10 md:mt-0'>
       <div className='flex flex-col gap-5 md:gap-7 col-span-6 md:col-span-7 text-center md:text-start md:ps-5'>
@@ -14,7 +16,7 @@ export const Hero = () => {
           Seazus is an efficient and easy-to-use URL shortening service that
           streamlines your online experience.
         </p>
-        {isLoggedIn ? (
+        {isAuth ? (
           <Shorten />
         ) : (
           <div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AiOutlineLink } from 'react-icons/ai';
 import { ShortUrlProps, ShortenURL } from '../types';
 import { ShortUrl } from './ShortUrl';
+import { generateUrl } from '../services/api-calls/url';
 
 export const Shorten = () => {
   const initValues: ShortenURL = {
@@ -30,7 +31,7 @@ export const Shorten = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(values);
+    generateUrl(values);
   };
 
   return (

@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
 import { redirect } from 'react-router-dom';
 
@@ -22,10 +22,10 @@ export const privateRequest = async () => {
   return request;
 };
 
-const refreshToken = async () => {
+export const refreshToken = async () => {
   const refresh_token = Cookies.get('refresh_token');
   try {
-    const response = await request.post('/auth/refresh-token', {
+    const response = await request.post('auth/refresh-token', {
       token: refresh_token,
     });
 
@@ -39,23 +39,10 @@ const refreshToken = async () => {
   }
 };
 
-axios.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      const newAccessToken = await refreshToken();
-
-      if (newAccessToken) {
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
-        return axios(originalRequest);
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
+axios.interceptors.response.use(undefined, (err: AxiosError) => {
+  // if (err.response?.status === 401)
+  console.log(
+    '🚀 ~ file: requestMethod.ts:43 ~ axios.interceptors.response.use ~ err:',
+    err
+  );
+});
