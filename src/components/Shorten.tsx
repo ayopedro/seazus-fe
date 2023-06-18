@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AiOutlineLink } from 'react-icons/ai';
-import { ShortUrlProps, ShortenURL } from '../types';
+import { ShortUrlResponse, ShortenURL } from '../types';
 import { ShortUrl } from './ShortUrl';
 import { generateUrl } from '../services/api-calls/url';
 
@@ -11,16 +11,15 @@ export const Shorten = () => {
     title: '',
   };
 
-  const initUrlValues: ShortUrlProps = {
-    long_url: '',
-    short_url: '',
+  const initUrlValues: ShortUrlResponse = {
+    longUrl: '',
+    shortUrl: '',
     id: '',
-    qr_code: '',
   };
 
   const [values, setValues] = useState<ShortenURL>(initValues);
-  const [showResult] = useState<boolean>(false);
-  const [urlData] = useState<ShortUrlProps>(initUrlValues);
+  const [showResult, setShowResult] = useState<boolean>(false);
+  const [urlData, setUrlData] = useState<ShortUrlResponse>(initUrlValues);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prevValues) => ({
@@ -31,7 +30,16 @@ export const Shorten = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    generateUrl(values);
+    const data = {
+      longUrl: values.long_url,
+      domain: values.domain,
+      title: values.title,
+    };
+    generateUrl(data).then((res) => {
+      setShowResult(true);
+      console.log(res);
+      setUrlData(res);
+    });
   };
 
   return (
@@ -53,7 +61,7 @@ export const Shorten = () => {
             <label htmlFor='domain'>Domain (optional)</label>
             <input
               type='text'
-              placeholder='seazus/'
+              placeholder='https://seazus.onrender.com'
               value={values.domain}
               name='domain'
               onChange={handleChange}
@@ -81,10 +89,9 @@ export const Shorten = () => {
         </button>
         {showResult && (
           <ShortUrl
-            long_url={urlData.long_url}
-            short_url={urlData.short_url}
+            long_url={urlData.longUrl}
+            short_url={urlData.shortUrl}
             id={urlData.id}
-            qr_code={urlData.qr_code}
           />
         )}
       </form>
