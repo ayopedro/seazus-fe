@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { forgotPassword } from '../services/api-calls';
 import { ForgotPassword } from '../types';
 import { useAppDispatch } from '../utils/hooks/reduxHook';
-import { saveUser } from '../services/slices/authSlice';
 
 export const ForgotPasswordPage = () => {
   const initialState = {
@@ -16,17 +15,10 @@ export const ForgotPasswordPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     setLoading(true);
-    forgotPassword(values as ForgotPassword, navigate)
-      .then((res) => {
-        setLoading(false);
-        dispatch(saveUser(res));
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.error(err);
-      });
+    await forgotPassword(values as ForgotPassword, dispatch, navigate);
+    setLoading(false);
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({

@@ -6,11 +6,7 @@ import { loginValidator } from '../utils/validators';
 import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
 import { authWithGoogle, loginUser } from '../services/api-calls';
 import { LoginUser } from '../types';
-import {
-  loginFailure,
-  loginStart,
-  loginSuccess,
-} from '../services/slices/authSlice';
+import { loginStart } from '../services/slices/authSlice';
 import { loading } from '../services/selectors';
 
 export const Login = () => {
@@ -22,11 +18,9 @@ export const Login = () => {
   const navigate = useNavigate();
   const isLoading = useAppSelector(loading);
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     dispatch(loginStart());
-    loginUser(values as LoginUser, navigate)
-      .then((res) => dispatch(loginSuccess(res)))
-      .catch((err) => dispatch(loginFailure(err.message)));
+    loginUser(values as LoginUser, dispatch, navigate);
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({

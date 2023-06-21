@@ -1,11 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { AuthResponse, AuthState } from '../../types';
+import { AuthState, ResponseUser } from '../../types';
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: Boolean(localStorage.getItem('isLoggedIn')),
-  access_token: null,
-  refresh_token: null,
   loading: 'idle',
   error: null,
 };
@@ -14,16 +12,16 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    saveUser(state, action: PayloadAction<AuthResponse>) {
-      state.user = action.payload.user;
+    saveUser(state, action: PayloadAction<ResponseUser>) {
+      state.user = action.payload;
     },
     registerStart(state) {
       state.loading = 'pending';
       state.error = null;
     },
-    registerSuccess(state, action: PayloadAction<AuthResponse>) {
+    registerSuccess(state, action: PayloadAction<ResponseUser>) {
       state.loading = 'idle';
-      state.user = action.payload.user;
+      state.user = action.payload;
       state.error = null;
     },
     registerFailure(state, action: PayloadAction<string>) {
@@ -46,11 +44,9 @@ const authSlice = createSlice({
       state.loading = 'pending';
       state.error = null;
     },
-    loginSuccess(state, action: PayloadAction<AuthResponse>) {
+    loginSuccess(state, action: PayloadAction<ResponseUser>) {
       state.loading = 'idle';
-      state.user = action.payload.user;
-      state.access_token = action.payload.accessToken;
-      state.refresh_token = action.payload.refreshToken;
+      state.user = action.payload;
       state.isAuthenticated = true;
       state.error = null;
     },
@@ -60,8 +56,6 @@ const authSlice = createSlice({
     },
     logoutUser(state) {
       state.user = null;
-      state.access_token = null;
-      state.refresh_token = null;
       state.isAuthenticated = false;
       state.error = null;
     },

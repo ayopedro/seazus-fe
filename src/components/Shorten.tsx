@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AiOutlineLink } from 'react-icons/ai';
-import { ShortUrlResponse, ShortenURL } from '../types';
+import { CreateShortUrl, ShortUrlResponse, ShortenURL } from '../types';
 import { ShortUrl } from './ShortUrl';
 import { generateUrl } from '../services/api-calls/url';
 
@@ -30,16 +30,24 @@ export const Shorten = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = {
+
+    const data: CreateShortUrl = {
       longUrl: values.long_url,
-      domain: values.domain,
+      customDomain: values.domain,
       title: values.title,
     };
-    generateUrl(data).then((res) => {
-      setShowResult(true);
-      console.log(res);
-      setUrlData(res);
-    });
+
+    generateUrl(data)
+      .then((res) => {
+        const data: ShortUrlResponse = {
+          longUrl: res.longUrl,
+          shortUrl: res.shortUrl,
+          id: res.id,
+        };
+        if (typeof res !== 'string') setShowResult(true);
+        setUrlData(data);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -92,6 +100,7 @@ export const Shorten = () => {
             long_url={urlData.longUrl}
             short_url={urlData.shortUrl}
             id={urlData.id}
+            onClick={() => setShowResult(false)}
           />
         )}
       </form>

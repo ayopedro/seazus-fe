@@ -1,6 +1,16 @@
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
-import { redirect } from 'react-router-dom';
+import { persistor } from '../services/store';
+
+interface RetryConfig extends AxiosRequestConfig {
+  retry: number;
+  retryDelay: number;
+}
+
+export const globalConfig: RetryConfig = {
+  retry: 2,
+  retryDelay: 1000,
+};
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -15,7 +25,7 @@ export const request: AxiosInstance = axios.create({
   },
 });
 
-export const privateRequest = async () => {
+export const privateRequest: () => AxiosInstance = () => {
   const token = Cookies.get('access_token') || '';
 
   request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -26,7 +36,7 @@ export const refreshToken = async () => {
   const refresh_token = Cookies.get('refresh_token');
   try {
     const response = await request.post('auth/refresh-token', {
-      token: refresh_token,
+      refreshToken: refresh_token,
     });
 
     const { accessToken } = response.data;
@@ -35,14 +45,30 @@ export const refreshToken = async () => {
     return accessToken;
   } catch (error) {
     console.error('Error refreshing token', error);
-    redirect('/login');
+    persistor.purge();
+    window.location.href = '/login';
   }
 };
 
-axios.interceptors.response.use(undefined, (err: AxiosError) => {
-  // if (err.response?.status === 401)
-  console.log(
-    '🚀 ~ file: requestMethod.ts:43 ~ axios.interceptors.response.use ~ err:',
-    err
-  );
-});
+request.interceptors.response.use(
+  (response) => response,
+  async (err: AxiosError) => {
+    const { config, response } = err;
+
+    if (!config || !config.retry || response?.status !== 401) {
+      return Promise.reject(err);
+    }
+
+    if (config && response?.statusText === 'Unauthorized') {
+      const newToken = await refreshToken();
+
+      if (newToken) {
+        config.headers['Authorization'] = `Bearer ${newToken}`;
+        request(config);
+      } else {
+        persistor.purge();
+        window.location.href = '/login';
+      }
+    }
+  }
+);

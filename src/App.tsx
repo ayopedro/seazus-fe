@@ -14,9 +14,12 @@ import { Protected } from './components/Protected';
 import 'antd/dist/reset.css';
 import { Result } from 'antd';
 import { ConfirmEmail } from './pages/ConfirmEmail';
+import { useAppSelector } from './utils/hooks/reduxHook';
+import { isAuthenticated } from './services/selectors';
 
 function App() {
   const navigate = useNavigate();
+  const isAuth = useAppSelector(isAuthenticated);
   return (
     <div className='container mx-auto min-h-screen px-5'>
       <Navbar />
@@ -29,15 +32,15 @@ function App() {
         <Route path='reset-password' element={<ResetPasswordPage />} />
         <Route
           path='profile'
-          element={<Protected component={Profile} isLoggedIn={true} />}
+          element={<Protected component={Profile} isLoggedIn={isAuth} />}
         />
         <Route
           path='link/:id'
-          element={<Protected component={LinkDetail} isLoggedIn={true} />}
+          element={<Protected component={LinkDetail} isLoggedIn={isAuth} />}
         />
         <Route
           path='change-password'
-          element={<Protected component={ChangePassword} isLoggedIn={true} />}
+          element={<Protected component={ChangePassword} isLoggedIn={isAuth} />}
         />
         <Route
           path='*'

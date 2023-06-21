@@ -5,11 +5,7 @@ import { registerValidator } from '../utils/validators';
 import { PasswordInput } from '../components/PasswordInput';
 import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
 import { loading } from '../services/selectors';
-import {
-  registerFailure,
-  registerStart,
-  registerSuccess,
-} from '../services/slices/authSlice';
+import { registerStart } from '../services/slices/authSlice';
 import { registerUser } from '../services/api-calls';
 import { RegisterUser } from '../types';
 
@@ -27,13 +23,7 @@ export const Signup = () => {
 
   const submitHandler = () => {
     dispatch(registerStart());
-    registerUser(values as RegisterUser, navigate)
-      .then((res) => {
-        dispatch(registerSuccess(res));
-      })
-      .catch((err) => {
-        dispatch(registerFailure(err.message));
-      });
+    registerUser(values as RegisterUser, dispatch, navigate);
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({

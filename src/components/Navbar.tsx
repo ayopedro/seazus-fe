@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { MdLogin } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
 import Avatar from 'react-avatar';
 import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
 import { isAuthenticated, user } from '../services/selectors';
-import Cookies from 'js-cookie';
-import { logoutUser } from '../services/slices/authSlice';
+import { logoutUserApi } from '../services/api-calls';
 
 export const Navbar = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -15,17 +14,14 @@ export const Navbar = () => {
   const user_details = useAppSelector(user);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const showDropdown = () => {
     setDropdown(!dropdown);
   };
 
-  const logoutHandler = () => {
-    Cookies.remove('access_token');
-    Cookies.remove('refresh_token');
-    localStorage.removeItem('isLoggedIn');
-    setDropdown(false);
-    dispatch(logoutUser());
+  const logoutHandler = async () => {
+    logoutUserApi(navigate, dispatch);
   };
 
   return (
