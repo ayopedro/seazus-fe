@@ -1,37 +1,44 @@
 import { ConfigProvider, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AnalyticsData } from '../types';
+import { format, parseISO } from 'date-fns';
 
-export const UrlAnalytics = () => {
+interface AnalyticsProps {
+  clickData: AnalyticsData[];
+}
+
+export const UrlAnalytics = ({ clickData }: AnalyticsProps) => {
   const columns: ColumnsType<AnalyticsData> = [
     {
-      key: 'device',
       title: 'Device',
       dataIndex: 'device',
+      key: 'device',
     },
     {
-      key: 'browser',
       title: 'Browser',
       dataIndex: 'browser',
+      key: 'browser',
     },
     {
-      key: 'operating_system',
       title: 'Operating System',
-      dataIndex: 'operating_system',
+      dataIndex: 'os',
+      key: 'os',
     },
     {
-      key: 'ip',
       title: 'IP Address',
-      dataIndex: 'ip',
+      dataIndex: 'ipAddress',
+      key: 'ipAddress',
     },
     {
-      key: 'timestamp',
       title: 'Timestamp',
       dataIndex: 'timestamp',
+      key: 'timestamp',
+      render: (value) => <p>{format(parseISO(value), 'dd MMM yyyy')}</p>,
     },
   ];
 
-  const data: AnalyticsData[] = [];
+  // const data: AnalyticsData[] = [];
+
   return (
     <div className='flex justify-center mx-auto bg-grey-full rounded-lg p-3'>
       <ConfigProvider
@@ -46,9 +53,10 @@ export const UrlAnalytics = () => {
       >
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={clickData}
           className='w-full text-white'
           scroll={{ x: 1000 }}
+          pagination={clickData.length < 10 && false}
         />
       </ConfigProvider>
     </div>

@@ -1,5 +1,7 @@
 export type AnalyticsData = {
-  deviceType?: string;
-  ip: string;
-  timestamp: Date;
+  browser: string;
+  device: string;
+  os: string;
+  ipAddress: string;
+  timestamp: string;
 };

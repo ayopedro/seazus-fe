@@ -7,3 +7,4 @@ export * from './table-data.types';
 export * from './url-analytics.types';
 export * from './auth.types';
 export * from './create-short-url.types';
+export * from './UrlData.types';

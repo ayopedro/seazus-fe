@@ -35,7 +35,7 @@ function App() {
           element={<Protected component={Profile} isLoggedIn={isAuth} />}
         />
         <Route
-          path='link/:id'
+          path='url/:id'
           element={<Protected component={LinkDetail} isLoggedIn={isAuth} />}
         />
         <Route

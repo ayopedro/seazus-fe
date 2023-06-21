@@ -28,7 +28,7 @@ export const Shorten = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const data: CreateShortUrl = {
@@ -37,17 +37,20 @@ export const Shorten = () => {
       title: values.title,
     };
 
-    generateUrl(data)
-      .then((res) => {
-        const data: ShortUrlResponse = {
-          longUrl: res.longUrl,
-          shortUrl: res.shortUrl,
-          id: res.id,
-        };
-        if (typeof res !== 'string') setShowResult(true);
-        setUrlData(data);
-      })
-      .catch((err) => console.log(err));
+    await generateUrl(data).then((res) => {
+      const data: ShortUrlResponse = {
+        longUrl: res.longUrl,
+        shortUrl: res.shortUrl,
+        id: res.id,
+      };
+      if (typeof res !== 'string') setShowResult(true);
+      setUrlData(data);
+    });
+  };
+
+  const closeResult = () => {
+    setShowResult(false);
+    setValues(initValues);
   };
 
   return (
@@ -100,7 +103,7 @@ export const Shorten = () => {
             long_url={urlData.longUrl}
             short_url={urlData.shortUrl}
             id={urlData.id}
-            onClick={() => setShowResult(false)}
+            onClick={closeResult}
           />
         )}
       </form>

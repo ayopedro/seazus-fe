@@ -64,7 +64,7 @@ request.interceptors.response.use(
 
       if (newToken) {
         config.headers['Authorization'] = `Bearer ${newToken}`;
-        request(config);
+        return request(config);
       } else {
         persistor.purge();
         window.location.href = '/login';
