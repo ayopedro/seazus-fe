@@ -22,6 +22,7 @@ export const Navbar = () => {
 
   const logoutHandler = async () => {
     logoutUserApi(navigate, dispatch);
+    setDropdown(!dropdown);
   };
 
   return (
@@ -42,7 +43,10 @@ export const Navbar = () => {
           </Link>
         </div>
       ) : (
-        <div className='border border-grey-mid bg-grey-full p-2 w-40 md:w-48 rounded-full flex justify-between items-center relative'>
+        <div
+          className='border border-grey-mid bg-grey-full p-2 w-40 md:w-48 rounded-full flex justify-between items-center relative'
+          onClick={showDropdown}
+        >
           <div className='flex items-center gap-2'>
             <Avatar
               name={`${user_details?.firstName} ${user_details?.lastName}`}
@@ -53,7 +57,7 @@ export const Navbar = () => {
               {user_details?.firstName} {user_details?.lastName}
             </p>
           </div>
-          <FaCaretDown className='cursor-pointer' onClick={showDropdown} />
+          <FaCaretDown className='cursor-pointer' />
           {dropdown && (
             <div className='absolute top-10 border border-grey-mid bg-grey-full shadow-xl mt-3 w-full right-0 rounded-md p-3'>
               <ul className='flex flex-col text-center divide-y divide-grey-mid gap-3'>

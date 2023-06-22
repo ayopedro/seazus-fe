@@ -203,6 +203,9 @@ export const logoutUserApi = async (
       if (axios.isAxiosError(error)) {
         const errorData = error.response?.data;
         notifyUser(errorData.message, 'error');
+        Cookies.remove('access_token');
+        Cookies.remove('refresh_token');
+        persistor.purge();
         navigate('/login');
         return errorData.message;
       }
