@@ -14,14 +14,23 @@ import {
 } from 'react-icons/md';
 import { RiShareBoxFill } from 'react-icons/ri';
 import { UrlAnalytics } from '../components/UrlAnalytics';
-import { Modal, QRCode, Tooltip } from 'antd';
-import { getUrlDetails } from '../services/api-calls/url';
+import { Modal, Tooltip } from 'antd';
+import {
+  changeStatus,
+  deleteQrCode,
+  generateQRCode,
+  getUrlDetails,
+} from '../services/api-calls/url';
 import { copyToClipboard } from '../utils/helpers';
 import { format, parseISO } from 'date-fns';
 import { UrlData } from '../types';
+import qrCodeImage from '../assets/5287978.jpg';
 
 export const LinkDetail = () => {
   const [urlData, setUrlData] = useState<UrlData>({} as UrlData);
+  const [qrCode, setQrCode] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [linkStatus, setLinkStatus] = useState<boolean>(urlData.status || true);
   const [showQr, setShowQr] = useState<boolean>(false);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,8 +40,34 @@ export const LinkDetail = () => {
   };
   console.log('🚀 ~ file: LinkDetail.tsx:7 ~ LinkDetail ~ urlData:', urlData);
 
+  const generateQR = async () => {
+    setLoading(true);
+    await generateQRCode(urlData.id).then((res) => {
+      setLoading(false);
+      setQrCode(res);
+    });
+  };
+
+  const deleteQR = async () => {
+    setLoading(true);
+    await deleteQrCode(urlData.id).then(() => {
+      setLoading(false);
+      setShowQr(false);
+      setQrCode(null);
+    });
+  };
+
+  const changeLinkStatus = async (status: boolean) => {
+    await changeStatus(urlData.id, status).then((res) =>
+      setLinkStatus(res.status)
+    );
+  };
+
   useEffect(() => {
-    getUrlDetails(id).then((res) => setUrlData(res));
+    getUrlDetails(id).then((res) => {
+      setUrlData(res.url);
+      setQrCode(res.qrCode);
+    });
     const noQr = document.querySelector('.ant-qrcode-expired');
     if (noQr) noQr.innerHTML = 'No QR code.';
   }, [id]);
@@ -78,13 +113,19 @@ export const LinkDetail = () => {
                 onClick={modalHandler}
               />
             </Tooltip>
-            {urlData.status === true ? (
+            {linkStatus ? (
               <Tooltip placement='top' title={'Disable link'} color='#353C4A'>
-                <MdLinkOff className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
+                <MdLinkOff
+                  className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
+                  onClick={() => changeLinkStatus(false)}
+                />
               </Tooltip>
             ) : (
               <Tooltip placement='top' title={'Enable link'} color='#353C4A'>
-                <MdLink className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
+                <MdLink
+                  className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
+                  onClick={() => changeLinkStatus(true)}
+                />
               </Tooltip>
             )}
           </div>
@@ -111,39 +152,44 @@ export const LinkDetail = () => {
           </small>
         </div>
         <section className='mt-10 md:mt-20'>
-          <UrlAnalytics clickData={urlData.clickData} />
+          <UrlAnalytics clickData={urlData?.clickData || []} />
         </section>
       </div>
       <Modal open={showQr} onCancel={modalHandler} centered footer={null}>
         <div className='flex flex-col items-center justify-center'>
-          {urlData.QrCode ? (
-            <div>
-              <img src={urlData.QrCode} alt={'Qr Code'} />
+          {qrCode ? (
+            <div className='flex flex-col items-center'>
+              <img src={qrCode} alt={'Qr Code'} />
               <small>seazus.onrender.com/{urlData.shortUrl}</small>
             </div>
           ) : (
-            <QRCode
-              value='https://ant.design/'
-              status='expired'
-              // onRefresh={() => console.log('refresh')}
-            />
+            <div className='flex flex-col items-center'>
+              <img src={qrCodeImage} alt='no QR code' width={300} />
+              <p className='text-sm'>No QR code!</p>
+            </div>
           )}
           <div className='mt-10 flex gap-3 items-center'>
-            {!urlData.QrCode ? (
-              <button className='btn bg-secondary border-none py-4'>
-                Generate
+            {!qrCode ? (
+              <button
+                className='btn bg-secondary border-none py-4'
+                onClick={generateQR}
+              >
+                {loading ? 'Generating...' : 'Generate'}
               </button>
             ) : (
               <>
                 <a
-                  href={urlData.QrCode}
+                  href={qrCode}
                   download={urlData.shortUrl}
                   className='btn bg-secondary hover:text-white'
                 >
                   Download
                 </a>
-                <button className='btn bg-red-500 border-none py-4'>
-                  Delete
+                <button
+                  className='btn bg-red-500 border-none py-4'
+                  onClick={deleteQR}
+                >
+                  {loading ? 'Deleting...' : 'Delete'}
                 </button>
               </>
             )}

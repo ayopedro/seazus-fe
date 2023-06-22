@@ -3,15 +3,9 @@ import { copyToClipboard } from '../utils/helpers';
 import { ShortUrlProps } from '../types';
 import { Link } from 'react-router-dom';
 
-export const ShortUrl = ({
-  long_url,
-  short_url,
-  id,
-  onClick,
-}: ShortUrlProps) => {
+export const ShortUrl = ({ short_url, id, onClick }: ShortUrlProps) => {
   return (
-    <div className='flex justify-between p-3 border-none rounded-md bg-primary mt-10'>
-      <p className='hidden md:block'>{long_url}</p>
+    <div className='flex justify-between p-3 border-none rounded-md bg-primary mt-10 w-full'>
       <div className='flex items-center gap-3 justify-between w-full s'>
         <a
           href={`http://localhost:3000/${short_url}`}
@@ -25,7 +19,9 @@ export const ShortUrl = ({
             <MdBarChart className='cursor-pointer' />
           </Link>
           <MdOutlineContentCopy
-            onClick={() => copyToClipboard(`seazus.onrender.com/${short_url}`)}
+            onClick={() =>
+              copyToClipboard(`https://seazus.onrender.com/${short_url}`)
+            }
             className='cursor-pointer'
           />
           <MdClose onClick={onClick} />

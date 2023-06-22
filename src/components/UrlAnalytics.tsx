@@ -37,8 +37,6 @@ export const UrlAnalytics = ({ clickData }: AnalyticsProps) => {
     },
   ];
 
-  // const data: AnalyticsData[] = [];
-
   return (
     <div className='flex justify-center mx-auto bg-grey-full rounded-lg p-3'>
       <ConfigProvider

@@ -100,7 +100,6 @@ export const Shorten = () => {
         </button>
         {showResult && (
           <ShortUrl
-            long_url={urlData.longUrl}
             short_url={urlData.shortUrl}
             id={urlData.id}
             onClick={closeResult}

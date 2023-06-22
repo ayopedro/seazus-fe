@@ -33,3 +33,53 @@ export const getUrlDetails = async (urlId: string | undefined) => {
       throw new Error('Error encountered!');
     });
 };
+
+export const generateQRCode = async (urlId: string) => {
+  return await privateRequest()
+    .post(`/url/${urlId}/qrcode`, undefined, globalConfig)
+    .then((res) => {
+      notifyUser(res.data.message, 'success');
+      return res.data.imageUrl;
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        notifyUser(errorData.message, 'error');
+        return errorData.message;
+      }
+      throw new Error('Error encountered!');
+    });
+};
+
+export const deleteQrCode = async (urlId: string) => {
+  return await privateRequest()
+    .delete(`/url/${urlId}/qrcode`, globalConfig)
+    .then((res) => {
+      notifyUser(res.data.message, 'success');
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        notifyUser(errorData.message, 'error');
+        return errorData.message;
+      }
+      throw new Error('Error encountered!');
+    });
+};
+
+export const changeStatus = async (urlId: string, status: boolean) => {
+  return await privateRequest()
+    .patch(`/url/${urlId}/status?status=${status}`, undefined, globalConfig)
+    .then((res) => {
+      notifyUser(res.data.message, 'success');
+      return res.data.result;
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        notifyUser(errorData.message, 'error');
+        return errorData.message;
+      }
+      throw new Error('Error encountered!');
+    });
+};
