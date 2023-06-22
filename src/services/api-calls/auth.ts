@@ -84,14 +84,16 @@ export const confirmEmail = async (
 };
 
 export const authWithGoogle = async () => {
-  return await request('auth/social-auth')
+  await request('auth/social-auth');
+  return request('auth/google-redirect')
     .then((response) => {
-      const { accessToken, refreshToken } = response.data;
+      console.log('🚀 ~ file: auth.ts:89 ~ .then ~ response:', response);
+      // const { accessToken, refreshToken } = response.data;
 
-      Cookies.set('access_token', accessToken);
-      Cookies.set('refresh_token', refreshToken);
+      // Cookies.set('access_token', accessToken);
+      // Cookies.set('refresh_token', refreshToken);
 
-      return response.data;
+      // return response.data;
     })
     .catch((error) => {
       if (axios.isAxiosError(error)) {
@@ -234,7 +236,7 @@ export const logoutUserApi = async (
     Dispatch<AnyAction>
 ) => {
   return await privateRequest()
-    .post('auth/logout')
+    .post('auth/logout', undefined, globalConfig)
     .then((response) => {
       Cookies.remove('access_token');
       Cookies.remove('refresh_token');

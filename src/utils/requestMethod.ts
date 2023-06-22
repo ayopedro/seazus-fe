@@ -8,7 +8,7 @@ interface RetryConfig extends AxiosRequestConfig {
 }
 
 export const globalConfig: RetryConfig = {
-  retry: 2,
+  retry: 1,
   retryDelay: 1000,
 };
 
