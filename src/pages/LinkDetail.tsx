@@ -39,7 +39,6 @@ export const LinkDetail = () => {
   const modalHandler = () => {
     setShowQr(!showQr);
   };
-  console.log('🚀 ~ file: LinkDetail.tsx:7 ~ LinkDetail ~ urlData:', urlData);
 
   const generateQR = async () => {
     setLoading(true);
@@ -153,7 +152,7 @@ export const LinkDetail = () => {
           </small>
         </div>
         <section className='mt-10 md:mt-20'>
-          {urlData?.clickData.length ? (
+          {urlData?.clickData && urlData?.clickData?.length ? (
             <UrlAnalytics clickData={urlData?.clickData || []} />
           ) : (
             <div className='flex flex-col items-center justify-center w-full'>
