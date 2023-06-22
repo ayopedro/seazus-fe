@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 export const ShortUrl = ({ short_url, id, onClick }: ShortUrlProps) => {
   return (
     <div className='flex justify-between p-3 border-none rounded-md bg-primary mt-10 w-full'>
-      <div className='flex items-center gap-3 justify-between w-full s'>
+      <div className='flex items-center gap-3 justify-between w-full text-white'>
         <a
-          href={`http://localhost:3000/${short_url}`}
+          href={`https://seazus.onrender.com/${short_url}`}
           target='_blank'
           rel='noreferrer'
         >
@@ -22,9 +22,12 @@ export const ShortUrl = ({ short_url, id, onClick }: ShortUrlProps) => {
             onClick={() =>
               copyToClipboard(`https://seazus.onrender.com/${short_url}`)
             }
-            className='cursor-pointer'
+            className='cursor-pointer hover:text-secondary'
           />
-          <MdClose onClick={onClick} />
+          <MdClose
+            onClick={onClick}
+            className='cursor-pointer hover:text-secondary'
+          />
         </div>
       </div>
     </div>

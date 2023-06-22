@@ -9,6 +9,7 @@ import {
   MdLinkOff,
   MdOutlineAdsClick,
   MdOutlineCalendarMonth,
+  MdOutlineClose,
   MdOutlineDriveFileRenameOutline,
   MdOutlineQrCode2,
 } from 'react-icons/md';
@@ -20,11 +21,11 @@ import {
   deleteQrCode,
   generateQRCode,
   getUrlDetails,
-} from '../services/api-calls/url';
+} from '../services/api-calls';
 import { copyToClipboard } from '../utils/helpers';
 import { format, parseISO } from 'date-fns';
 import { UrlData } from '../types';
-import qrCodeImage from '../assets/5287978.jpg';
+import noData from '../assets/3009287 1.png';
 
 export const LinkDetail = () => {
   const [urlData, setUrlData] = useState<UrlData>({} as UrlData);
@@ -152,19 +153,34 @@ export const LinkDetail = () => {
           </small>
         </div>
         <section className='mt-10 md:mt-20'>
-          <UrlAnalytics clickData={urlData?.clickData || []} />
+          {urlData?.clickData.length ? (
+            <UrlAnalytics clickData={urlData?.clickData || []} />
+          ) : (
+            <div className='flex flex-col items-center justify-center w-full'>
+              <img src={noData} alt='No Data' width={350} />
+              <p className='mb-2'>No Analytics</p>
+            </div>
+          )}
         </section>
       </div>
-      <Modal open={showQr} onCancel={modalHandler} centered footer={null}>
-        <div className='flex flex-col items-center justify-center'>
+      <Modal
+        open={showQr}
+        onCancel={modalHandler}
+        centered
+        footer={null}
+        closeIcon={
+          <MdOutlineClose className={'text-white hover:text-primary text-lg'} />
+        }
+      >
+        <div className='flex flex-col items-center justify-center py-5'>
           {qrCode ? (
-            <div className='flex flex-col items-center'>
+            <div className='flex flex-col items-center gap-1'>
               <img src={qrCode} alt={'Qr Code'} />
               <small>seazus.onrender.com/{urlData.shortUrl}</small>
             </div>
           ) : (
             <div className='flex flex-col items-center'>
-              <img src={qrCodeImage} alt='no QR code' width={300} />
+              <img src={noData} alt='no QR code' width={300} />
               <p className='text-sm'>No QR code!</p>
             </div>
           )}
@@ -181,7 +197,7 @@ export const LinkDetail = () => {
                 <a
                   href={qrCode}
                   download={urlData.shortUrl}
-                  className='btn bg-secondary hover:text-white'
+                  className='btn bg-secondary border-none hover:text-white'
                 >
                   Download
                 </a>

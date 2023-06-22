@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AiOutlineLink } from 'react-icons/ai';
 import { CreateShortUrl, ShortUrlResponse, ShortenURL } from '../types';
 import { ShortUrl } from './ShortUrl';
-import { generateUrl } from '../services/api-calls/url';
+import { generateUrl } from '../services/api-calls';
 
 export const Shorten = () => {
   const initValues: ShortenURL = {
@@ -54,7 +54,7 @@ export const Shorten = () => {
   };
 
   return (
-    <div className='md:w-5/6'>
+    <div className='py-5'>
       <form className='flex flex-col' onSubmit={handleSubmit}>
         <div className='flex flex-col'>
           <label htmlFor='long_url'>Paste a long URL</label>

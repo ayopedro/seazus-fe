@@ -83,3 +83,19 @@ export const changeStatus = async (urlId: string, status: boolean) => {
       throw new Error('Error encountered!');
     });
 };
+
+export const deleteUrl = async (urlId: string) => {
+  return await privateRequest()
+    .delete(`/url/${urlId}`, globalConfig)
+    .then((res) => {
+      notifyUser(res.data.message, 'success');
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        notifyUser(errorData.message, 'error');
+        return errorData.message;
+      }
+      throw new Error('Error encountered!');
+    });
+};
