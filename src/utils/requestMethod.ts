@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { persistor } from '../services/store';
 
 interface RetryConfig extends AxiosRequestConfig {
-  retry: number;
+  retry?: number;
   retryDelay: number;
 }
 
@@ -52,10 +52,10 @@ export const refreshToken = async () => {
 
 request.interceptors.response.use(
   (response) => response,
-  async (err: AxiosError) => {
+  async (err: AxiosError<RetryConfig>) => {
     const { config, response } = err;
 
-    if (!config || !config.retry || response?.status !== 401) {
+    if (!config || !(config as RetryConfig).retry || response?.status !== 401) {
       return Promise.reject(err);
     }
 

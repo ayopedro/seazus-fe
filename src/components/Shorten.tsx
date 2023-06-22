@@ -30,6 +30,7 @@ export const Shorten = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    closeResult();
 
     const data: CreateShortUrl = {
       longUrl: values.long_url,
@@ -43,7 +44,9 @@ export const Shorten = () => {
         shortUrl: res.shortUrl,
         id: res.id,
       };
-      if (typeof res !== 'string') setShowResult(true);
+      if (typeof res !== 'string') {
+        setShowResult(true);
+      }
       setUrlData(data);
     });
   };
