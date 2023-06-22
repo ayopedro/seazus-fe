@@ -54,12 +54,12 @@ export const Navbar = () => {
               round
             />
             <p className='text-sm md:text-base'>
-              {user_details?.firstName} {user_details?.lastName}
+              {user_details?.firstName} {user_details?.lastName.charAt(0)}.
             </p>
           </div>
           <FaCaretDown className='cursor-pointer' />
           {dropdown && (
-            <div className='absolute top-10 border border-grey-mid bg-grey-full shadow-xl mt-3 w-full right-0 rounded-md p-3'>
+            <div className='absolute top-10 md:top-14 border border-grey-mid bg-grey-full shadow-xl mt-3 w-full right-0 rounded-md p-3'>
               <ul className='flex flex-col text-center divide-y divide-grey-mid gap-3'>
                 <li onClick={showDropdown}>
                   <NavLink
