@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { PasswordInput } from '../components/PasswordInput';
 import { loading, user } from '../services/selectors';
-import { confirmEmail } from '../services/api-calls';
+import { confirmEmail, resetToken } from '../services/api-calls';
 import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
 import { useForm } from '../utils/hooks/useForm';
 import { resetValidator } from '../utils/validators';
@@ -10,6 +10,7 @@ import {
   confirmStart,
   confirmSuccess,
 } from '../services/slices/authSlice';
+import { Tooltip } from 'antd';
 
 export const ConfirmEmail = () => {
   const initialState = {
@@ -52,6 +53,18 @@ export const ConfirmEmail = () => {
             onChange={handleChange}
           />
           <span className='text-red-500 text-sm mt-2'>{errors.token}</span>
+          <small className='text-primary mt-3 flex items-center gap-1'>
+            <Tooltip title={'Check your email spam'} trigger={'hover'}>
+              <span>Can't find OTP?</span>
+            </Tooltip>
+            <button
+              type='button'
+              onClick={() => resetToken(user_details?.id)}
+              className='text-secondary underline underline-offset-2'
+            >
+              Get New OTP
+            </button>
+          </small>
         </div>
         <button className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-5'>
           {isLoading === 'pending' ? 'Verifying...' : 'Confirm Email'}

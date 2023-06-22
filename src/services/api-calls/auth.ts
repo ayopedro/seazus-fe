@@ -1,8 +1,13 @@
-import { privateRequest, request } from '../../utils/requestMethod';
+import {
+  globalConfig,
+  privateRequest,
+  request,
+} from '../../utils/requestMethod';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import {
   AuthState,
+  ChangePasswordType,
   ForgotPassword,
   LoginUser,
   RegisterUser,
@@ -146,6 +151,45 @@ export const forgotPassword = async (
 
       dispatch(saveUser(response.data.user));
       navigate('/reset-password');
+      return response.data;
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        notifyUser(errorData.message, 'error');
+        return errorData.message;
+      }
+      throw new Error('Error encountered!');
+    });
+};
+
+export const resetToken = async (id: string | undefined) => {
+  return await request
+    .post(`auth/new-otp/${id}`)
+    .then((response) => {
+      notifyUser(response.data.message, 'success');
+      return response.data;
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        notifyUser(errorData.message, 'error');
+        return errorData.message;
+      }
+      throw new Error('Error encountered!');
+    });
+};
+
+export const changePassword = async (
+  data: ChangePasswordType,
+  navigate: NavigateFunction
+) => {
+  return await privateRequest()
+    .patch('auth/change-password', data, globalConfig)
+    .then((response) => {
+      notifyUser(response.data.message, 'success');
+
+      navigate('/profile');
       return response.data;
     })
     .catch((error) => {

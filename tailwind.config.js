@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: { sans: 'Open Sans, sans-serif' },
+      fontSize: 18,
       colors: {
         primary: '#EB568E',
         secondary: '#144EE3',

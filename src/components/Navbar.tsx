@@ -81,7 +81,7 @@ export const Navbar = () => {
                     Change Password
                   </NavLink>
                 </li>
-                <li onClick={logoutHandler} className='pt-2'>
+                <li onClick={logoutHandler} className='pt-2 cursor-pointer'>
                   Logout
                 </li>
               </ul>

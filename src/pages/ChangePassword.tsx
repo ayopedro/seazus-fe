@@ -1,8 +1,10 @@
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PasswordInput } from '../components/PasswordInput';
 import { useForm } from '../utils/hooks/useForm';
 import { changePasswordValidator } from '../utils/validators';
+import { changePassword } from '../services/api-calls';
+import { ChangePasswordType } from '../types';
 
 export const ChangePassword = () => {
   const initialState = {
@@ -11,8 +13,15 @@ export const ChangePassword = () => {
     confirm_password: '',
   };
 
+  const navigate = useNavigate();
+
   const submitHandler = () => {
-    console.log(values);
+    const data: ChangePasswordType = {
+      currentPassword: values.current_password,
+      newPassword: values.new_password,
+    };
+
+    changePassword(data, navigate);
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm({
