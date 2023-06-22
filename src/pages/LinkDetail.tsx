@@ -15,7 +15,7 @@ import {
 } from 'react-icons/md';
 import { RiShareBoxFill } from 'react-icons/ri';
 import { UrlAnalytics } from '../components/UrlAnalytics';
-import { Modal, Tooltip } from 'antd';
+import { Modal, Skeleton, Tooltip } from 'antd';
 import {
   changeStatus,
   deleteQrCode,
@@ -82,75 +82,83 @@ export const LinkDetail = () => {
         Return
       </button>
       <div className='md:w-10/12 mx-auto mt-10'>
-        <div className='flex justify-between items-center md:mb-5'>
-          <h3 className='text-xl md:text-3xl flex items-center gap-2'>
-            <AiOutlineScissor className='text-primary' />
-            {urlData.shortUrl}
-          </h3>
-          <div className='flex items-center gap-3 md:gap-5'>
-            <Tooltip placement='top' title={'Visit URL'} color='#353C4A'>
-              <a
-                href={`https://seazus.onrender.com/${urlData.shortUrl}`}
-                target='_blank'
-                rel='noreferrer'
-              >
-                <RiShareBoxFill className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
-              </a>
-            </Tooltip>
-            <Tooltip placement='top' title={'Copy'} color='#353C4A'>
-              <MdContentCopy
-                className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
-                onClick={() =>
-                  copyToClipboard(
-                    `https://seazus.onrender.com/${urlData.shortUrl}`
-                  )
-                }
-              />
-            </Tooltip>
-            <Tooltip placement='top' title={'QR Code'} color='#353C4A'>
-              <MdOutlineQrCode2
-                className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
-                onClick={modalHandler}
-              />
-            </Tooltip>
-            {linkStatus ? (
-              <Tooltip placement='top' title={'Disable link'} color='#353C4A'>
-                <MdLinkOff
+        {urlData.shortUrl ? (
+          <div className='flex justify-between items-center md:mb-5'>
+            <h3 className='text-xl md:text-3xl flex items-center gap-2'>
+              <AiOutlineScissor className='text-primary' />
+              {urlData.shortUrl}
+            </h3>
+            <div className='flex items-center gap-3 md:gap-5'>
+              <Tooltip placement='top' title={'Visit URL'} color='#353C4A'>
+                <a
+                  href={`https://seazus.onrender.com/${urlData.shortUrl}`}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  <RiShareBoxFill className='cursor-pointer text-2xl md:text-3xl hover:text-secondary' />
+                </a>
+              </Tooltip>
+              <Tooltip placement='top' title={'Copy'} color='#353C4A'>
+                <MdContentCopy
                   className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
-                  onClick={() => changeLinkStatus(false)}
+                  onClick={() =>
+                    copyToClipboard(
+                      `https://seazus.onrender.com/${urlData.shortUrl}`
+                    )
+                  }
                 />
               </Tooltip>
-            ) : (
-              <Tooltip placement='top' title={'Enable link'} color='#353C4A'>
-                <MdLink
+              <Tooltip placement='top' title={'QR Code'} color='#353C4A'>
+                <MdOutlineQrCode2
                   className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
-                  onClick={() => changeLinkStatus(true)}
+                  onClick={modalHandler}
                 />
               </Tooltip>
-            )}
+              {linkStatus ? (
+                <Tooltip placement='top' title={'Disable link'} color='#353C4A'>
+                  <MdLinkOff
+                    className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
+                    onClick={() => changeLinkStatus(false)}
+                  />
+                </Tooltip>
+              ) : (
+                <Tooltip placement='top' title={'Enable link'} color='#353C4A'>
+                  <MdLink
+                    className='cursor-pointer text-2xl md:text-3xl hover:text-secondary'
+                    onClick={() => changeLinkStatus(true)}
+                  />
+                </Tooltip>
+              )}
+            </div>
           </div>
-        </div>
-        <div>
-          {urlData.title && (
+        ) : (
+          <Skeleton active />
+        )}
+        {urlData.shortUrl ? (
+          <div>
+            {urlData.title && (
+              <p className='flex items-center gap-2 text-sm md:text-base my-3 text-slate-500'>
+                <MdOutlineDriveFileRenameOutline />
+                {urlData.title}
+              </p>
+            )}
             <p className='flex items-center gap-2 text-sm md:text-base my-3 text-slate-500'>
-              <MdOutlineDriveFileRenameOutline />
-              {urlData.title}
+              <FaLink />
+              {urlData.longUrl}
             </p>
-          )}
-          <p className='flex items-center gap-2 text-sm md:text-base my-3 text-slate-500'>
-            <FaLink />
-            {urlData.longUrl}
-          </p>
-          <p className='flex items-center gap-2 text-sm md:text-base my-3 text-slate-500'>
-            <MdOutlineAdsClick />
-            {urlData.clicks} Clicks
-          </p>
-          <small className='flex gap-2 items-center md:text-base'>
-            <MdOutlineCalendarMonth />
-            {urlData.createdAt &&
-              format(parseISO(urlData?.createdAt), 'MMM dd, yyyy')}
-          </small>
-        </div>
+            <p className='flex items-center gap-2 text-sm md:text-base my-3 text-slate-500'>
+              <MdOutlineAdsClick />
+              {urlData.clicks} Clicks
+            </p>
+            <small className='flex gap-2 items-center md:text-base'>
+              <MdOutlineCalendarMonth />
+              {urlData.createdAt &&
+                format(parseISO(urlData?.createdAt), 'MMM dd, yyyy')}
+            </small>
+          </div>
+        ) : (
+          <Skeleton active />
+        )}
         <section className='mt-10 md:mt-20'>
           {urlData?.clickData && urlData?.clickData?.length ? (
             <UrlAnalytics clickData={urlData?.clickData || []} />

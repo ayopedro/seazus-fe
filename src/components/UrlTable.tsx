@@ -2,6 +2,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { TableData } from '../types';
 import {
   MdDelete,
+  MdOutlineClose,
   MdOutlineContentCopy,
   MdOutlineQrCode2,
   MdRemoveRedEye,
@@ -116,10 +117,15 @@ export const UrlTable = () => {
               open={showDeleteModal}
               onCancel={() => setShowDeleteModal(!showDeleteModal)}
               centered
-              title={<h4 className='text-dark'>Delete URL?</h4>}
+              title={<h4 className='text-white bg-grey-full'>Delete URL?</h4>}
               footer={null}
+              closeIcon={
+                <MdOutlineClose
+                  className={'text-white hover:text-primary text-lg'}
+                />
+              }
             >
-              <h3 className='text-dark text-lg text-center mt-10'>
+              <h3 className='text-white text-lg text-center mt-10'>
                 Are you sure you want to delete this URL?
               </h3>
               <div className='flex justify-end gap-3 items-center mt-14'>

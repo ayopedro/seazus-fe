@@ -203,6 +203,7 @@ export const logoutUserApi = async (
       if (axios.isAxiosError(error)) {
         const errorData = error.response?.data;
         notifyUser(errorData.message, 'error');
+        navigate('/login');
         return errorData.message;
       }
       throw new Error('Error encountered!');
