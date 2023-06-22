@@ -206,6 +206,7 @@ export const logoutUserApi = async (
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
         persistor.purge();
+        dispatch(logoutUser());
         navigate('/login');
         return errorData.message;
       }
