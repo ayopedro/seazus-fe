@@ -249,25 +249,20 @@ export const logoutUserApi = async (
   > &
     Dispatch<AnyAction>
 ) => {
+  Cookies.remove('access_token');
+  Cookies.remove('refresh_token');
+  persistor.purge();
+  navigate('/');
+  dispatch(logoutUser());
   return await privateRequest()
     .post('auth/logout', undefined, globalConfig)
     .then((response) => {
-      Cookies.remove('access_token');
-      Cookies.remove('refresh_token');
-      persistor.purge();
-      dispatch(logoutUser());
       notifyUser(response.data.message, 'success');
-      navigate('/login');
     })
     .catch((error) => {
       if (axios.isAxiosError(error)) {
         const errorData = error.response?.data;
         notifyUser(errorData.message, 'error');
-        Cookies.remove('access_token');
-        Cookies.remove('refresh_token');
-        persistor.purge();
-        dispatch(logoutUser());
-        navigate('/login');
         return errorData.message;
       }
       throw new Error('Error encountered!');
