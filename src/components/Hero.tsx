@@ -14,6 +14,7 @@ export const Hero = () => {
   const modalHandler = () => {
     setShowModal(!showModal);
   };
+
   return (
     <section className='flex flex-col justify-center md:grid md:grid-cols-12 items-center min-h-[80vh] mt-10 md:mt-0'>
       <div className='flex flex-col gap-5 md:gap-7 col-span-6 md:col-span-7 text-center md:text-start'>

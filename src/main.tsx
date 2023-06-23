@@ -8,6 +8,7 @@ import './index.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorFallback } from './components/ErrorFallback.tsx';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -15,7 +16,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <App />
+            <GoogleOAuthProvider
+              clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+            >
+              <App />
+            </GoogleOAuthProvider>
           </ErrorBoundary>
         </PersistGate>
       </Provider>

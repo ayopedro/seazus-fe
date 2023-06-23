@@ -1,3 +1,5 @@
+import { TokenResponse, CredentialResponse } from '@react-oauth/google';
+
 export type User = {
   id: string;
   firstName: string;
@@ -44,3 +46,5 @@ export type ChangePasswordType = {
   currentPassword: string;
   newPassword: string;
 };
+
+export type GoogleResponse = TokenResponse | CredentialResponse;

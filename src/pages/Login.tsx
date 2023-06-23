@@ -8,6 +8,7 @@ import { authWithGoogle, loginUser } from '../services/api-calls';
 import { LoginUser } from '../types';
 import { loginStart } from '../services/slices/authSlice';
 import { loading } from '../services/selectors';
+import { useGoogleLogin, useGoogleOneTapLogin } from '@react-oauth/google';
 
 export const Login = () => {
   const initialState = {
@@ -27,6 +28,15 @@ export const Login = () => {
     initialState,
     validate: loginValidator,
     callback: submitHandler,
+  });
+
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (response) =>
+      await authWithGoogle(response, dispatch, navigate),
+  });
+
+  useGoogleOneTapLogin({
+    onSuccess: (response) => authWithGoogle(response, dispatch, navigate),
   });
 
   return (
@@ -64,7 +74,7 @@ export const Login = () => {
         <button
           type='button'
           className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-2 flex items-center justify-center'
-          onClick={() => authWithGoogle()}
+          onClick={() => loginGoogle()}
         >
           Login with <FcGoogle className='ml-2' />
         </button>

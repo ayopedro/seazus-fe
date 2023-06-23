@@ -9,6 +9,7 @@ import {
   AuthState,
   ChangePasswordType,
   ForgotPassword,
+  GoogleResponse,
   LoginUser,
   RegisterUser,
   ResetPassword,
@@ -83,60 +84,37 @@ export const confirmEmail = async (
     });
 };
 
-export const authWithGoogle = async () => {
-  const myWindow = window.open(
-    'http://localhost:3000/api/auth/social-auth',
-    '',
-    'width=400,height=400'
-  );
+export const authWithGoogle = async (
+  data: GoogleResponse,
+  dispatch: ThunkDispatch<
+    EmptyObject & { auth: AuthState } & PersistPartial,
+    undefined,
+    AnyAction
+  > &
+    Dispatch<AnyAction>,
+  navigate: NavigateFunction
+) => {
+  return request
+    .post('auth/google-auth', data)
+    .then((res) => {
+      const { accessToken, refreshToken, user } = res.data;
 
-  myWindow?.addEventListener('message', (event: MessageEvent) => {
-    // Verify that the message is coming from the expected origin and handle the data
-
-    const dataFromPopup = event.data;
-    // Process the data received from the popup window
-    console.log('Data received:', dataFromPopup);
-  });
-  // myWindow?.document.write(
-  //   `
-  //     <iframe
-  //       src=${'http://localhost:3000/api/auth/social-auth'}
-  //       width=100%
-  //       height=100%
-  //       id="frames">
-  //     </iframe>
-  //     <script>
-  //       const content = document.getElementById('frames');
-  //       content.addEventListener('load', function() {
-  //         var iframeDocument = content.contentWindow.document;
-  //         var preElement = iframeDocument.querySelector('pre');
-  //         var preContent = preElement.textContent;
-  //         console.log('Content of the <pre> tag within the iframe:', preContent);
-  //       });
-  //     </script>
-  //   `
-  // );
-
-  // myWindow?.close();
-
-  // myWindow.document.getElementById('frames').innerText;
-
-  // return request('auth/google-redirect')
-  //   .then((response) => {
-  //     console.log('🚀 ~ file: auth.ts:89 ~ .then ~ response:', response);
-  //     // const { accessToken, refreshToken } = response.data;
-
-  //     // Cookies.set('access_token', accessToken);
-  //     // Cookies.set('refresh_token', refreshToken);
-
-  //     // return response.data;
-  //   })
-  //   .catch((error) => {
-  //     if (axios.isAxiosError(error)) {
-  //       return error.message;
-  //     }
-  //     throw new Error('Error encountered!');
-  //   });
+      Cookies.set('access_token', accessToken);
+      Cookies.set('refresh_token', refreshToken);
+      notifyUser('Login successful', 'success');
+      dispatch(loginSuccess(user));
+      navigate('/');
+      return user;
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        notifyUser(errorData.message, 'error');
+        dispatch(loginFailure(errorData.message));
+        return errorData.message;
+      }
+      throw new Error('Error encountered!');
+    });
 };
 
 export const loginUser = async (
