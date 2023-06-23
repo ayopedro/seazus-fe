@@ -249,7 +249,6 @@ export const logoutUserApi = async (
   > &
     Dispatch<AnyAction>
 ) => {
-  Cookies.remove('access_token');
   Cookies.remove('refresh_token');
   persistor.purge();
   navigate('/');
@@ -257,6 +256,7 @@ export const logoutUserApi = async (
   return await privateRequest()
     .post('auth/logout', undefined, globalConfig)
     .then((response) => {
+      Cookies.remove('access_token');
       notifyUser(response.data.message, 'success');
     })
     .catch((error) => {
