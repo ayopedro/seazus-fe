@@ -6,8 +6,9 @@ import { PasswordInput } from '../components/PasswordInput';
 import { useAppDispatch, useAppSelector } from '../utils/hooks/reduxHook';
 import { loading } from '../services/selectors';
 import { registerStart } from '../services/slices/authSlice';
-import { registerUser } from '../services/api-calls';
+import { authWithGoogle, registerUser } from '../services/api-calls';
 import { RegisterUser } from '../types';
+import { useGoogleLogin, useGoogleOneTapLogin } from '@react-oauth/google';
 
 export const Signup = () => {
   const initialState = {
@@ -32,13 +33,24 @@ export const Signup = () => {
     callback: submitHandler,
   });
 
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (response) =>
+      await authWithGoogle(response, dispatch, navigate),
+  });
+
+  useGoogleOneTapLogin({
+    onSuccess: (response) => {
+      authWithGoogle(response, dispatch, navigate);
+    },
+  });
+
   return (
     <div className='h-5/6 flex justify-center items-center my-10'>
       <form className='auth-form' onSubmit={handleSubmit}>
         <button
           type='button'
           className='btn border-gray-500 hover:bg-secondary hover:border-secondary mt-2 flex items-center justify-center'
-          // onClick={() => dispatch(authWithGoogle())}
+          onClick={() => loginGoogle()}
         >
           Register with <FcGoogle className='ml-2' />
         </button>
