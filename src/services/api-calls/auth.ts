@@ -101,7 +101,7 @@ export const authWithGoogle = async (
 
       Cookies.set('access_token', accessToken);
       Cookies.set('refresh_token', refreshToken);
-      notifyUser('Login successful', 'success');
+      notifyUser('Authentication successful!', 'success');
       dispatch(loginSuccess(user));
       navigate('/');
       return user;
