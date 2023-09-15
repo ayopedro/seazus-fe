@@ -37,7 +37,7 @@ export const UrlTable = () => {
             rel='noreferrer'
             className='hover:text-primary text-sm md:text-md'
           >
-            https://seazus.onrender.com/{text}
+            https://seazus-be.onrender.com/{text}
           </a>
           <div className='copy'>
             <Tooltip placement='top' title={'Copy'} color='#353C4A'>
