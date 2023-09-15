@@ -43,7 +43,7 @@ export const UrlTable = () => {
             <Tooltip placement='top' title={'Copy'} color='#353C4A'>
               <MdOutlineContentCopy
                 onClick={() =>
-                  copyToClipboard(`https://seazus.onrender.com/${text}`)
+                  copyToClipboard(`https://seazus-be.onrender.com/${text}`)
                 }
               />
             </Tooltip>
